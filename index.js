@@ -1,58 +1,109 @@
 
+const QuizeData = [
 
-let bagItems;
-onLoad();
+    {
+        question: "what doeshtml stand for?",
+        options: [
+            "hyper text markup laungauge",
+            "hyper text transfer language",
+            "hyper text miss language",
+            "hyper text unique lanuage",
+        ],
+        correct: 0,
+    },
+    {
+        question: "what doeshtml stand for1?",
+        options: [
+            "hyper text markup laungauge",
+            "hyper text transfer language",
+            "hyper text miss language",
+            "hyper text unique lanuage",
+        ],
+        correct: 2,
+    },
+    {
+        question: "what doeshtml stand for3?",
+        options: [
+            "hyper text markup laungauge",
+            "hyper text transfer language",
+            "hyper text miss language",
+            "hyper text unique lanuage",
+        ],
+        correct: 0,
+    },
+    {
+        question: "what doeshtml stand for5?",
+        options: [
+            "hyper text markup laungauge",
+            "hyper text transfer language",
+            "hyper text miss language",
+            "hyper text unique lanuage",
+        ],
+        correct: 1,
+    },
+    {
+        question: "what doeshtml stand for9?",
+        options: [
+            "hyper text markup laungauge",
+            "hyper text transfer language",
+            "hyper text miss language",
+            "hyper text unique lanuage",
+        ],
+        correct: 0,
+    },
+];
+const Quize=document.querySelector('#quize');
+const answerElm = document.querySelectorAll(".answer");
+const [questionElm, option_1, option_2, option_3, option_4,] = document.querySelectorAll("#question, .option_1,.option_2,.option_3,.option_4");
+const submitBtn = document.querySelector("#submit");
+let currentQuiz = 0;
+let score = 0;
+const loadQuiz = () => {
+    const { question, options } = QuizeData[currentQuiz];
+    console.log(question);
+    questionElm.innerText = question;
+    options.forEach(
+        (curOption, index) => (window[`option_${index + 1}`].innerText = curOption)
+    );
 
-function onLoad() {
-    let bagItemsStr = localStorage.getItem('bagItems');
-    bagItems = bagItemsStr ? JSON.parse(bagItemsStr) : [];
-    displayItemsOnHomePage();
-    displayBagIcon();
-}
+};
+loadQuiz();
+const getSelectedOption = () => {
+    // let ans_index;
+    // answerElm.forEach((curOption, index) => {
+    //     if (curOption.checked) {
+    //         ans_index = index;
+    //     }
+    // });
+    // return ans_index;
 
-function Addtobag(itemid) {
-    bagItems.push(itemid);
-    localStorage.setItem('bagItems', JSON.stringify(bagItems));
-    displayBagIcon();
-}
-function displayBagIcon() {
-    let bagItemsCountElements = document.querySelector('.bag-items-count');
-    if (bagItems.length > 0) {
-        bagItemsCountElements.style.visibility = 'visible';
-        bagItemsCountElements.innerHTML = bagItems.length;
+    let answerElement = Array.from(answerElm);
+    return answerElement.findIndex((curElem) => curElem.checked);
+};
+const deselectedAnswers = () => {
+    return answerElm.forEach((curElem) => curElem.checked = false);
+};
+submitBtn.addEventListener('click', () => {
+    const selectedOptionIndex = getSelectedOption();
+    console.log(selectedOptionIndex);
 
+    if (selectedOptionIndex === QuizeData[currentQuiz].correct) {
+        score = score + 1;
+    }
+    currentQuiz++;
+
+    if (currentQuiz < QuizeData.length) {
+        deselectedAnswers();
+        loadQuiz();
     } else {
-        bagItemsCountElements.style.visibility = 'hidden';
+        Quize.innerHTML = `<div class="result">
+        
+        <h2>your score:${score}/${QuizeData.length}correct answers<h2/>
+        <P>Congractulations on completing the quize!!<P/>
+        <button class="reload-button btn btn-light " type="button"onclick="location.reload()">play again<button/>
+        <div/>`;
     }
 
-
-
-
-}
-
-function displayItemsOnHomePage() {
-    itemsContainerElement = document.querySelector('.items-container');
-    if(!itemsContainerElement){
-        return;
-    }
-    let innerHtml = '';
-    item.forEach(item => {
-        innerHtml += `
-    <div class="item-container">
-     <img src="${item.images}" alt="item-img" style="height: 250px;width: 100%; margin-left: 3px">
-        <div class="rating">${item.rating.stars} ⭐| ${item.rating.reviews}k</div>
-         <div class="company-name">${item.company}</div>
-        <div class="item-name">${item.item_name}</div>
-            <div class="prize">
-                        <span class="current-price">${item.current_price}</span>
-                        <span class="original-price">${item.original_price}</span>
-                        <span class="dicount">${item.dicount}% OFF</span>
-    
-          </div>
-                    <button class="btn btn-success mt-2 btn-add-bag"onclick="Addtobag(${item.id}) ">Add to bag</button>
-    </div>`
-    });
-
-    itemsContainerElement.innerHTML = innerHtml;
-}
-
+});
+//alert ("hii hetal ");
+//console.log("ryrtjytjt");
